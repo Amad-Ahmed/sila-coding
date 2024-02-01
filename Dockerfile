@@ -17,7 +17,7 @@ COPY . /app
 RUN pip install -r requirements.txt
 
 # Command to run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0","--reload"]
 
 EXPOSE 8000
 
