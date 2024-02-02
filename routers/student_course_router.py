@@ -21,6 +21,10 @@ def get_db():
 def create_student_course(student_course: StudentCourseCreate, db: Session = Depends(get_db)):
     return crud.add_student_to_course(db=db, student_id=student_course.student_id, course_id=student_course.course_id)
 
+@router.get("/student-course/{student_id}", tags=["student-course"])
+def read_student_courses(student_id: int, db: Session = Depends(get_db)):
+    return crud.get_student_courses(db, student_id=student_id)
+
 @router.delete("/student-course/", tags=["student-course"])
 def delete_student_course(student_course: StudentCourseDelete, db: Session = Depends(get_db)):
     if crud.remove_student_from_course(db=db, student_id=student_course.student_id, course_id=student_course.course_id):

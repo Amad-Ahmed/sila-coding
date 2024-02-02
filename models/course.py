@@ -16,3 +16,6 @@ class Course(Base):
     # Relationship to the StudentCourse model (if you have a StudentCourse model defined)
     students = relationship("StudentCourse", back_populates="course")
 
+    # Relationship to the TeacherCourse model (if you have a TeacherCourse model defined)
+    teachers = relationship("TeacherCourse", back_populates="course")
+

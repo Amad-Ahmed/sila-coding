@@ -6,6 +6,8 @@ from routers.department_router import router as department_router
 from routers.student_router import router as student_router
 from routers.course_router import router as course_router
 from routers.student_course_router import router as student_course_router
+from routers.teacher_router import router as teacher_router
+from routers.teacher_course_router import router as teacher_course_router
 
 
 app = FastAPI()
@@ -17,6 +19,8 @@ app.include_router(department_router)
 app.include_router(student_router)
 app.include_router(course_router)
 app.include_router(student_course_router)
+app.include_router(teacher_router)
+app.include_router(teacher_course_router)
 
 
 

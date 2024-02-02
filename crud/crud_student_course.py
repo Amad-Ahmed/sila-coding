@@ -9,6 +9,10 @@ def add_student_to_course(db: Session, student_id: int, course_id: int):
     db.refresh(student_course)
     return student_course
 
+def get_student_courses(db: Session, student_id: int):
+    return db.query(StudentCourse).filter_by(student_id=student_id).all()
+
+
 def remove_student_from_course(db: Session, student_id: int, course_id: int):
     student_course = db.query(StudentCourse).filter_by(student_id=student_id, course_id=course_id).first()
     if student_course:
