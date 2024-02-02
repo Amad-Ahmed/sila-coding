@@ -5,3 +5,4 @@ class DepartmentCreate(BaseModel):
 
 class DepartmentRead(DepartmentCreate):
     id: int
+    name: str

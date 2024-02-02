@@ -9,4 +9,23 @@ def create_student(db: Session, student: StudentCreate):
     db.refresh(db_student)
     return db_student
 
-# Add more CRUD operations as needed
+# Read operation
+def get_student(db: Session, student_id: int):
+    return db.query(Student).filter(Student.id == student_id).first()
+
+# Update operation
+def update_student(db: Session, student_id: int, student_data: StudentCreate):
+    db_student = db.query(Student).filter(Student.id == student_id).first()
+    db_student.name = student_data.name
+    db_student.dept_id = student_data.dept_id
+    db_student.dob = student_data.dob
+    db.commit()
+    db.refresh(db_student)
+    return db_student
+
+# Delete operation
+def delete_student(db: Session, student_id: int):
+    db_student = db.query(Student).filter(Student.id == student_id).first()
+    db.delete(db_student)
+    db.commit()
+    return {"ok": True}
