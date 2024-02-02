@@ -11,3 +11,6 @@ class Student(Base):
 
     # Relationship to the Department model (if you have a Department model defined)
     department = relationship("Department", back_populates="students")
+
+    # Relationship to the StudentCourse model (if you have a StudentCourse model defined)
+    courses = relationship("StudentCourse", back_populates="student")
