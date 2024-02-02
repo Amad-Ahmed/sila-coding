@@ -11,4 +11,6 @@ class Department(Base):
 
     students = relationship("Student", back_populates="department")
 
+    courses = relationship("Course", back_populates="department")
+
 
