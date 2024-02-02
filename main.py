@@ -8,12 +8,25 @@ from routers.course_router import router as course_router
 from routers.student_course_router import router as student_course_router
 from routers.teacher_router import router as teacher_router
 from routers.teacher_course_router import router as teacher_course_router
+from seed import seed_data
+
+# from contextlib import asynccontextmanager
 
 
-app = FastAPI()
 
 # Only call this once, after all models have been imported
 Base.metadata.create_all(bind=engine)
+
+
+
+# @asynccontextmanager
+# async def lifespan(application:FastAPI):
+#     seed_data()
+#     yield
+#     print("Database seeded successfully.")
+
+# app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 
 app.include_router(department_router)
 app.include_router(student_router)
@@ -24,6 +37,8 @@ app.include_router(teacher_course_router)
 
 
 
-@app.get("/")
-async def root():
+
+@app.get("/seed-data")
+def root():
+    seed_data()
     return {"message": "Hello World"}
