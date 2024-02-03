@@ -52,4 +52,4 @@ To run this project, follow these steps:
 
 ### Note
 
-As initially the database may not contain any data therefore run "seed-data" endpoint to populate the database with some initial data.
+As initially the database may not contain any data therefore run "seed-data" endpoint to populate the database with some initial data. Furthermore, the docs folder contains the multiple csv files indicating the format which can be used to populate the database using them.
