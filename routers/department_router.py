@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends,File, UploadFile, HTTPException
 from sqlalchemy.orm import Session
 from schemas.department_schema import DepartmentCreate, DepartmentRead
 from database import SessionLocal
 import crud.crud_department as crud
-
+import io
+import csv
 
 router = APIRouter()
 router.tags = ["departments"]
@@ -17,6 +18,20 @@ def get_db():
 @router.post("/departments/", response_model=DepartmentRead, tags=["departments"])
 def add_department(department: DepartmentCreate, db: Session = Depends(get_db)):
     return crud.create_department(db=db, department=department)
+
+
+@router.post('/departments/upload-csv/', tags=["departments"])
+async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    contents = await file.read()
+    contents = contents.decode("utf-8-sig")  # Using "utf-8-sig" to automatically handle BOM
+    file = io.StringIO(contents)
+    reader = csv.DictReader(file)
+    for row in reader:
+        # Assuming the rest of your processing logic is correct
+        department = DepartmentCreate(**row)
+        crud.create_department(db=db, department=department)
+    return {"message": "CSV has been processed"}
+
 
 
 @router.get("/departments/{department_id}", response_model=DepartmentRead, tags=["departments"])
