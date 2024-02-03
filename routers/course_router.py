@@ -22,17 +22,21 @@ def get_db():
 def create(course: CourseCreate, db: Session = Depends(get_db)):
     return crud.create_course(db=db, course=course)
 
+
+
 @router.post('/courses/upload-csv/', tags=["courses"])
 async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    contents = await file.read()
-    contents = contents.decode("utf-8-sig")  # Using "utf-8-sig" to automatically handle BOM
-    file = io.StringIO(contents)
-    reader = csv.DictReader(file)
-    for row in reader:
-        # Assuming the rest of your processing logic is correct
-        course = CourseCreate(**row)
-        crud.create_course(db=db, course=course)
-    return {"message": "CSV has been processed"}
+    try:
+        contents = await file.read()
+        contents = contents.decode("utf-8-sig")  # Using "utf-8-sig" to automatically handle BOM
+        file = io.StringIO(contents)
+        reader = csv.DictReader(file)
+        for row in reader:
+            course = CourseCreate(**row)
+            crud.create_course(db=db, course=course)
+        return {"message": "CSV has been processed"}
+    except HTTPException as e:
+        return HTTPException(status_code=500, detail=f"Database error: {e}")
 
 
 
@@ -47,6 +51,7 @@ def read_all(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 @router.put("/courses/{course_id}", response_model=CourseRead, tags=["courses"])
 def update(course_id: int, course: CourseCreate, db: Session = Depends(get_db)):
     return crud.update_course(db=db, course_id=course_id, course_data=course)
+    
 
 @router.delete("/courses/{course_id}", tags=["courses"])
 def delete(course_id: int, db: Session = Depends(get_db)):

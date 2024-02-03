@@ -58,17 +58,22 @@ def extract_course_data(row):
 
 @router.post('/student-course/complete-upload-csv/', tags=["student-course"])
 async def complete_upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    contents = await file.read()
-    contents = contents.decode("utf-8-sig")
-    file = io.StringIO(contents)
-    reader = csv.DictReader(file)
-    for row in reader:
-        student = get_or_create(db,Student,**extract_student_data(row))
-        course = get_or_create(db,Course,**extract_course_data(row))
-        student_course = StudentCourse(student_id=student.id,course_id=course.id)
-        db.add(student_course)
-        db.commit()
-    return {"message": "CSV has been processed"}
+    try:
+        contents = await file.read()
+        contents = contents.decode("utf-8-sig")
+        file = io.StringIO(contents)
+        reader = csv.DictReader(file)
+        for row in reader:
+            student = get_or_create(db,Student,**extract_student_data(row))
+            course = get_or_create(db,Course,**extract_course_data(row))
+            student_course = StudentCourse(student_id=student.id,course_id=course.id)
+            db.add(student_course)
+            db.commit()
+        return {"message": "CSV has been processed"}
+    except HTTPException as e:
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 
@@ -90,8 +95,7 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
 def read_student_courses(student_id: int, db: Session = Depends(get_db)):
     return crud.get_student_courses(db, student_id=student_id)
 
+
 @router.delete("/student-course/", tags=["student-course"])
 def delete_student_course(student_course: StudentCourseDelete, db: Session = Depends(get_db)):
-    if crud.remove_student_from_course(db=db, student_id=student_course.student_id, course_id=student_course.course_id):
-        return {"message": "Student removed from course successfully"}
-    raise HTTPException(status_code=404, detail="Student or course not found")
+    return crud.remove_student_from_course(db=db, student_id=student_course.student_id, course_id=student_course.course_id)

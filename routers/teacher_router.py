@@ -17,9 +17,15 @@ def get_db():
     finally:
         db.close()
 
+# @router.post("/teachers/", response_model=TeacherRead, tags=["teachers"])
+# def add_teacher(teacher: TeacherCreate, db: Session = Depends(get_db)):
+#     return crud.create_teacher(db=db, teacher=teacher)
 @router.post("/teachers/", response_model=TeacherRead, tags=["teachers"])
 def add_teacher(teacher: TeacherCreate, db: Session = Depends(get_db)):
-    return crud.create_teacher(db=db, teacher=teacher)
+    try:
+        return crud.create_teacher(db=db, teacher=teacher)
+    except HTTPException as e:
+        raise e
 
 
 @router.post('/teachers/upload-csv/', tags=["teachers"])

@@ -18,9 +18,11 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/teacher-courses/", response_model=TeacherCourseRead,tags=["teacher-courses"])
+
+@router.post("/teacher-courses/", response_model=TeacherCourseRead, tags=["teacher-courses"])
 def add_teacher_course(teacher_course: TeacherCourseCreate, db: Session = Depends(get_db)):
     return crud.create_teacher_course(db=db, teacher_id=teacher_course.teacher_id, course_id=teacher_course.course_id)
+    
 
 
 @router.post('/teacher-courses/upload-csv/', tags=["teacher-courses"])
@@ -36,17 +38,11 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
     return {"message": "CSV has been processed"}
 
 
-
-
-
 @router.get("/teacher-courses/{teacher_course_id}", response_model=TeacherCourseRead,tags=["teacher-courses"])
 def read_teacher_course(teacher_course_id: int, db: Session = Depends(get_db)):
-    db_teacher_course = crud.get_teacher_course(db, teacher_course_id=teacher_course_id)
-    if db_teacher_course is None:
-        raise HTTPException(status_code=404, detail="TeacherCourse not found")
-    return db_teacher_course
+    return crud.get_teacher_course(db, teacher_course_id=teacher_course_id)
+    
 
-# get all teacher courses
 @router.get("/teacher-courses/", response_model=list[TeacherCourseRead],tags=["teacher-courses"])
 def read_all_teacher_courses(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud.get_teacher_courses(db, skip=skip, limit=limit)
@@ -60,15 +56,11 @@ def read_teacher_courses(teacher_id: int, db: Session = Depends(get_db)):
 
 @router.delete("/teacher-courses/{teacher_course_id}", tags=["teacher-courses"])
 def remove_teacher_course(teacher_course_id: int, db: Session = Depends(get_db)):
-    result = crud.delete_teacher_course(db, teacher_course_id=teacher_course_id)
-    if not result.get("ok"):
-        raise HTTPException(status_code=404, detail="TeacherCourse not found")
-    return result
+    return crud.delete_teacher_course(db, teacher_course_id=teacher_course_id)
+    
 
 # remove using teacher and course id
 @router.delete("/teacher-courses/", tags=["teacher-courses"])
 def remove_teacher_course_by_teacher_course(teacher_course: TeacherCourseCreate, db: Session = Depends(get_db)):
-    result = crud.delete_teacher_course_by_teacher_course(db, teacher_id=teacher_course.teacher_id, course_id=teacher_course.course_id)
-    if not result.get("ok"):
-        raise HTTPException(status_code=404, detail="TeacherCourse not found")
-    return result
+    return crud.delete_teacher_course_by_teacher_course(db, teacher_id=teacher_course.teacher_id, course_id=teacher_course.course_id)
+   

@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, File, UploadFile
+from fastapi import APIRouter, Depends, File, UploadFile, HTTPException
 from sqlalchemy.orm import Session
 from schemas.student_schema import StudentCreate, StudentRead
 import crud.crud_student as crud
 from database import SessionLocal
 import csv
 import io
+
 
 router = APIRouter()
 router.tags = ["students"]
@@ -18,6 +19,8 @@ def get_db():
 @router.post("/students/", response_model=StudentRead, tags=["students"])
 def add_student(student: StudentCreate, db: Session = Depends(get_db)):
     return crud.create_student(db=db, student=student)
+
+
 
 @router.post('/students/upload-csv/', tags=["students"])
 async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):

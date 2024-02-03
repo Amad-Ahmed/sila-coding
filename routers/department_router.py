@@ -42,6 +42,7 @@ def read_department(department_id: int, db: Session = Depends(get_db)):
 def update_department(department_id: int, department: DepartmentCreate, db: Session = Depends(get_db)):
     return crud.update_department(db, department_id=department_id, department_update=department)
 
+
 @router.delete("/departments/{department_id}", tags=["departments"])
 def delete_department(department_id: int, db: Session = Depends(get_db)):
     return crud.delete_department(db, department_id=department_id)
