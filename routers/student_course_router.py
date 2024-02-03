@@ -85,7 +85,6 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
     file = io.StringIO(contents)
     reader = csv.DictReader(file)
     for row in reader:
-        # Assuming the rest of your processing logic is correct
         studentCourse = StudentCourseCreate(**row)
         crud.add_student_to_course(db=db, student_id=studentCourse.student_id, course_id=studentCourse.course_id)
     return {"message": "CSV has been processed"}
@@ -95,10 +94,12 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
 def read_student_courses(student_id: int, db: Session = Depends(get_db)):
     return crud.get_student_courses(db, student_id=student_id)
 
+@router.get("/student-course/{course_id}", tags=["student-course"])
+def read_course_students(course_id: int, db: Session = Depends(get_db)):
+    return crud.get_course_students(db, course_id=course_id)
 
-@router.get("/student-course/getAllRecords", tags=["student-course"])
-def read_all_student_courses(db: Session = Depends(get_db)):
-    return crud.get_all_student_courses(db)
+
+
 
 
 @router.delete("/student-course/", tags=["student-course"])

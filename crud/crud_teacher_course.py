@@ -15,9 +15,9 @@ def create_teacher_course(db: Session, teacher_id: int, course_id: int):
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
 
-def get_teacher_course(db: Session, teacher_id: int, course_id: int):
+def get_teachers_by_course(db: Session, course_id: int):
     try:
-        return db.query(TeacherCourse).filter(TeacherCourse.teacher_id == teacher_id, TeacherCourse.course_id == course_id).first()
+        return db.query(TeacherCourse).filter(TeacherCourse.course_id == course_id).first()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

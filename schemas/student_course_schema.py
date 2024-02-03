@@ -8,3 +8,7 @@ class StudentCourseCreate(BaseModel):
 class StudentCourseDelete(BaseModel):
     student_id: int
     course_id: int
+
+
+class StudentCourseRead(StudentCourseCreate):
+    id: int

@@ -41,5 +41,5 @@ def delete_department(db: Session, department_id: int):
         raise HTTPException(status_code=404, detail="Department not found")
     db.delete(db_department)
     db.commit()
-    return {"ok": True, "message": f"Department with id {department_id} successfully deleted"}
+    return {"message": f"Department with id {department_id} successfully deleted"}
 
