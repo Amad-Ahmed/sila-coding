@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, File, UploadFile
 from sqlalchemy.orm import Session
 from schemas.student_schema import StudentCreate, StudentRead
 import crud.crud_student as crud
 from database import SessionLocal
+import csv
+import io
 
 router = APIRouter()
 router.tags = ["students"]
@@ -16,6 +18,20 @@ def get_db():
 @router.post("/students/", response_model=StudentRead, tags=["students"])
 def add_student(student: StudentCreate, db: Session = Depends(get_db)):
     return crud.create_student(db=db, student=student)
+
+@router.post('/students/upload-csv/', tags=["students"])
+async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    contents = await file.read()
+    contents = contents.decode("utf-8-sig")  # Using "utf-8-sig" to automatically handle BOM
+    file = io.StringIO(contents)
+    reader = csv.DictReader(file)
+    for row in reader:
+        # Assuming the rest of your processing logic is correct
+        student = StudentCreate(**row)
+        crud.create_student(db=db, student=student)
+    return {"message": "CSV has been processed"}
+
+
 
 @router.get("/students/{student_id}", response_model=StudentRead,tags=["students"])
 def read_student(student_id: int, db: Session = Depends(get_db)):
