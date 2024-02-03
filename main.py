@@ -9,8 +9,9 @@ from routers.student_course_router import router as student_course_router
 from routers.teacher_router import router as teacher_router
 from routers.teacher_course_router import router as teacher_course_router
 from seed import seed_data
+from dotenv import load_dotenv
 
-# from contextlib import asynccontextmanager
+load_dotenv()
 
 
 
@@ -18,14 +19,6 @@ from seed import seed_data
 Base.metadata.create_all(bind=engine)
 
 
-
-# @asynccontextmanager
-# async def lifespan(application:FastAPI):
-#     seed_data()
-#     yield
-#     print("Database seeded successfully.")
-
-# app = FastAPI(lifespan=lifespan)
 app = FastAPI()
 
 app.include_router(department_router)
@@ -41,4 +34,4 @@ app.include_router(teacher_course_router)
 @app.get("/seed-data")
 def root():
     seed_data()
-    return {"message": "Hello World"}
+    return {"message": "Data Seeded Successfully"}

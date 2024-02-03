@@ -96,6 +96,11 @@ def read_student_courses(student_id: int, db: Session = Depends(get_db)):
     return crud.get_student_courses(db, student_id=student_id)
 
 
+@router.get("/student-course/getAllRecords", tags=["student-course"])
+def read_all_student_courses(db: Session = Depends(get_db)):
+    return crud.get_all_student_courses(db)
+
+
 @router.delete("/student-course/", tags=["student-course"])
 def delete_student_course(student_course: StudentCourseDelete, db: Session = Depends(get_db)):
     return crud.remove_student_from_course(db=db, student_id=student_course.student_id, course_id=student_course.course_id)

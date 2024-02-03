@@ -20,6 +20,13 @@ def get_teacher(db: Session, teacher_id: int):
         return db.query(Teacher).filter(Teacher.id == teacher_id).first()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+def get_teachers(db: Session, skip: int = 0, limit: int = 100):
+    try:
+        return db.query(Teacher).offset(skip).limit(limit).all()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 def update_teacher(db: Session, teacher_id: int, teacher_data: TeacherCreate):
     try:

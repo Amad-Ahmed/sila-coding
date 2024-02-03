@@ -47,7 +47,7 @@ def read_teacher_course(teacher_course_id: int, db: Session = Depends(get_db)):
 def read_all_teacher_courses(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud.get_teacher_courses(db, skip=skip, limit=limit)
 
-# get all courses for a teacher
+
 @router.get("/teacher-courses/teacher/{teacher_id}", response_model=list[TeacherCourseRead],tags=["teacher-courses"])
 def read_teacher_courses(teacher_id: int, db: Session = Depends(get_db)):
     return crud.get_teacher_courses_by_teacher(db, teacher_id=teacher_id)

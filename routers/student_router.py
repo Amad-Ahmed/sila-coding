@@ -40,6 +40,11 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
 def read_student(student_id: int, db: Session = Depends(get_db)):
     return crud.get_student(db, student_id=student_id)
 
+@router.get("/students/", tags=["students"])
+def read_all_students(db: Session = Depends(get_db)):
+    return crud.get_all_students(db)
+
+
 @router.put("/students/{student_id}", response_model=StudentRead,tags=["students"])
 def update_student_endpoint(student_id: int, student: StudentCreate, db: Session = Depends(get_db)):
     return crud.update_student(db, student_id=student_id, student_data=student)

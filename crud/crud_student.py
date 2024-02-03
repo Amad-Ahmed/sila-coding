@@ -23,6 +23,10 @@ def get_student(db: Session, student_id: int):
         raise HTTPException(status_code=404, detail=f"Student with id {student_id} not found")
     return db_student   
 
+def get_all_students(db: Session):
+    return db.query(Student).all()
+
+
 
 def update_student(db: Session, student_id: int, student_data: StudentCreate):
     try:

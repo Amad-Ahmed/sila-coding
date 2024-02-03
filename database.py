@@ -1,9 +1,11 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import os
 
-# Corrected the database URL to use the service name defined in docker-compose.yml
-SQLALCHEMY_DATABASE_URL = "mysql://user:1234@mysql8/sila"
+
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 

@@ -10,7 +10,11 @@ def get_course_students(db: Session, course_id: int):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-
+def get_all_student_courses(db: Session):
+    try:
+        return db.query(StudentCourse).all()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 def add_student_to_course(db: Session, student_id: int, course_id: int):
     try:
