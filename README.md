@@ -49,3 +49,7 @@ To run this project, follow these steps:
    The `--reload` flag enables auto-reloading of the server on code changes.
 
 5. Access the API docs on swagger at `http://127.0.0.1:8000/docs`.
+
+### Note
+
+As initially the database may not contain any data therefore run "seed-data" endpoint to populate the database with some initial data.
