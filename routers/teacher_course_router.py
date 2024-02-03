@@ -36,6 +36,9 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
     return {"message": "CSV has been processed"}
 
 
+
+
+
 @router.get("/teacher-courses/{teacher_course_id}", response_model=TeacherCourseRead,tags=["teacher-courses"])
 def read_teacher_course(teacher_course_id: int, db: Session = Depends(get_db)):
     db_teacher_course = crud.get_teacher_course(db, teacher_course_id=teacher_course_id)
