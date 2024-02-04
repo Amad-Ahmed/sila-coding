@@ -16,12 +16,13 @@ def get_db():
     finally:
         db.close()
 
+# endpoint to create a new student
 @router.post("/students/", response_model=StudentRead, tags=["students"])
 def add_student(student: StudentCreate, db: Session = Depends(get_db)):
     return crud.create_student(db=db, student=student)
 
 
-
+# endpoint to upload a CSV file
 @router.post('/students/upload-csv/', tags=["students"])
 async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
     contents = await file.read()
@@ -29,26 +30,27 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
     file = io.StringIO(contents)
     reader = csv.DictReader(file)
     for row in reader:
-        # Assuming the rest of your processing logic is correct
         student = StudentCreate(**row)
         crud.create_student(db=db, student=student)
     return {"message": "CSV has been processed"}
 
 
-
+# endpoint to read student by its id
 @router.get("/students/{student_id}", response_model=StudentRead,tags=["students"])
 def read_student(student_id: int, db: Session = Depends(get_db)):
     return crud.get_student(db, student_id=student_id)
 
+# endpoint to read all students
 @router.get("/students/", tags=["students"])
 def read_all_students(db: Session = Depends(get_db)):
     return crud.get_all_students(db)
 
-
+# endpoint to update a student by its id
 @router.put("/students/{student_id}", response_model=StudentRead,tags=["students"])
 def update_student_endpoint(student_id: int, student: StudentCreate, db: Session = Depends(get_db)):
     return crud.update_student(db, student_id=student_id, student_data=student)
 
+# endpoint to delete a student by its id
 @router.delete("/students/{student_id}", tags=["students"])
 def delete_student_endpoint(student_id: int, db: Session = Depends(get_db)):
     return crud.delete_student(db, student_id=student_id)

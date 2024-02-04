@@ -18,6 +18,24 @@ You can also view the diagram interactively [here](https://dbdiagram.io/d/sila-a
 - Pydantic
 - Uvicorn
 
+## Architecture
+
+The application is containerized using Docker, comprising three main components:
+
+1. **Web Application**: The FastAPI application serving the RESTful API.
+2. **Database**: A MySQL database server for data persistence.
+3. **PhpMyAdmin**: A web interface for database management.
+
+## Project Structure
+
+The project structure is organized as follows, illustrated in the provided image:
+
+- **crud**: Contains the CRUD operations for each model.
+- **docs**: Documentation and CSV files for database seeding.
+- **models**: SQLAlchemy models that define the database schema.
+- **routers**: API route definitions.
+- **schemas**: Pydantic models for request and response data validation.
+
 ## Running the Project
 
 To run this project, follow these steps:

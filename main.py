@@ -11,6 +11,7 @@ from routers.teacher_course_router import router as teacher_course_router
 from seed import seed_data
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
 
 
@@ -21,6 +22,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+# Include routers
 app.include_router(department_router)
 app.include_router(student_router)
 app.include_router(course_router)
@@ -30,7 +32,7 @@ app.include_router(teacher_course_router)
 
 
 
-
+# endpoint to seed data
 @app.get("/seed-data")
 def root():
     seed_data()

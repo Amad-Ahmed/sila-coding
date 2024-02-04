@@ -18,12 +18,14 @@ def get_db():
     finally:
         db.close()
 
+
+# endpoint to create a new course
 @router.post("/courses/", response_model=CourseRead, tags=["courses"])
 def create(course: CourseCreate, db: Session = Depends(get_db)):
     return crud.create_course(db=db, course=course)
 
 
-
+# endpoint to upload a CSV file
 @router.post('/courses/upload-csv/', tags=["courses"])
 async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
     try:
@@ -39,20 +41,23 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
         return HTTPException(status_code=500, detail=f"Database error: {e}")
 
 
-
+# endpoint to read a course by its id
 @router.get("/courses/{course_id}", response_model=CourseRead, tags=["courses"])
 def read(course_id: int, db: Session = Depends(get_db)):
     return crud.get_course(db=db, course_id=course_id)
 
+# endpoint to read all courses
 @router.get("/courses/", response_model=list[CourseRead], tags=["courses"])
 def read_all(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud.get_courses(db=db, skip=skip, limit=limit)
 
+# endpoint to update a course by its id
 @router.put("/courses/{course_id}", response_model=CourseRead, tags=["courses"])
 def update(course_id: int, course: CourseCreate, db: Session = Depends(get_db)):
     return crud.update_course(db=db, course_id=course_id, course_data=course)
     
 
+# endpoint to delete a course by its id
 @router.delete("/courses/{course_id}", tags=["courses"])
 def delete(course_id: int, db: Session = Depends(get_db)):
     return crud.delete_course(db=db, course_id=course_id)

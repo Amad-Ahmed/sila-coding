@@ -22,6 +22,8 @@ def get_db():
     finally:
         db.close()
 
+
+# endpoint to create a new student-course
 @router.post("/student-course/", response_model=StudentCourseCreate, tags=["student-course"])
 def create_student_course(student_course: StudentCourseCreate, db: Session = Depends(get_db)):
     return crud.add_student_to_course(db=db, student_id=student_course.student_id, course_id=student_course.course_id)
@@ -56,6 +58,7 @@ def extract_course_data(row):
     }
 
 
+# endpoint to upload a CSV file and create student-course and also create student and course if they don't exist
 @router.post('/student-course/complete-upload-csv/', tags=["student-course"])
 async def complete_upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
     try:
@@ -77,7 +80,7 @@ async def complete_upload_csv(file: UploadFile = File(...), db: Session = Depend
 
 
 
-
+# endpoint to upload a CSV file and create student-course
 @router.post('/student-course/upload-csv/', tags=["student-course"])
 async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
     contents = await file.read()
@@ -90,18 +93,19 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
     return {"message": "CSV has been processed"}
 
 
+# endpoint to read student-course by its student id
 @router.get("/student-course/{student_id}", tags=["student-course"])
 def read_student_courses(student_id: int, db: Session = Depends(get_db)):
     return crud.get_student_courses(db, student_id=student_id)
 
+
+# endpoint to read student-course by its course id
 @router.get("/student-course/{course_id}", tags=["student-course"])
 def read_course_students(course_id: int, db: Session = Depends(get_db)):
     return crud.get_course_students(db, course_id=course_id)
 
 
-
-
-
+# endpoint to delete a student-course by its student id and course id
 @router.delete("/student-course/", tags=["student-course"])
 def delete_student_course(student_course: StudentCourseDelete, db: Session = Depends(get_db)):
     return crud.remove_student_from_course(db=db, student_id=student_course.student_id, course_id=student_course.course_id)

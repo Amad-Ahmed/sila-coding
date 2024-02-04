@@ -19,12 +19,13 @@ def get_db():
         db.close()
 
 
+# endpoint to create a new teacher-course
 @router.post("/teacher-courses/", response_model=TeacherCourseRead, tags=["teacher-courses"])
 def add_teacher_course(teacher_course: TeacherCourseCreate, db: Session = Depends(get_db)):
     return crud.create_teacher_course(db=db, teacher_id=teacher_course.teacher_id, course_id=teacher_course.course_id)
     
 
-
+# endpoint to upload a CSV file
 @router.post('/teacher-courses/upload-csv/', tags=["teacher-courses"])
 async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
     contents = await file.read()
@@ -38,28 +39,31 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
     return {"message": "CSV has been processed"}
 
 
+# endpoint to read teacher-course by its course id
 @router.get("/teacher-courses/{course_id}", response_model=TeacherCourseRead,tags=["teacher-courses"])
 def read_teacher_course(course_id: int, db: Session = Depends(get_db)):
     return crud.get_teachers_by_course(db, course_id=course_id)
     
 
+# endpoint to read all teacher-courses
 @router.get("/teacher-courses/", response_model=list[TeacherCourseRead],tags=["teacher-courses"])
 def read_all_teacher_courses(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud.get_teacher_courses(db, skip=skip, limit=limit)
 
 
+# endpoint to read teacher-course by its teacher id
 @router.get("/teacher-courses/teacher/{teacher_id}", response_model=list[TeacherCourseRead],tags=["teacher-courses"])
 def read_teacher_courses(teacher_id: int, db: Session = Depends(get_db)):
     return crud.get_teacher_courses_by_teacher(db, teacher_id=teacher_id)
 
 
-
+# endpoint to remove teacher-course by its teacher-course-id
 @router.delete("/teacher-courses/{teacher_course_id}", tags=["teacher-courses"])
 def remove_teacher_course(teacher_course_id: int, db: Session = Depends(get_db)):
     return crud.delete_teacher_course(db, teacher_course_id=teacher_course_id)
     
 
-# remove using teacher and course id
+# endpoint to remove teacher-course by its teacher id and course id
 @router.delete("/teacher-courses/", tags=["teacher-courses"])
 def remove_teacher_course_by_teacher_course(teacher_course: TeacherCourseCreate, db: Session = Depends(get_db)):
     return crud.delete_teacher_course_by_teacher_course(db, teacher_id=teacher_course.teacher_id, course_id=teacher_course.course_id)

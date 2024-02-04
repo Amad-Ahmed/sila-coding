@@ -15,11 +15,14 @@ def get_db():
     finally:
         db.close()
 
+
+# endpoint to create a new department
 @router.post("/departments/", response_model=DepartmentRead, tags=["departments"])
 def add_department(department: DepartmentCreate, db: Session = Depends(get_db)):
     return crud.create_department(db=db, department=department)
 
 
+# endpoint to upload a CSV file
 @router.post('/departments/upload-csv/', tags=["departments"])
 async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
     contents = await file.read()
@@ -34,15 +37,18 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
 
 
 
+# endpoint to read department by its id
 @router.get("/departments/{department_id}", response_model=DepartmentRead, tags=["departments"])
 def read_department(department_id: int, db: Session = Depends(get_db)):
     return crud.get_department(db, department_id=department_id)
 
+# endpoint to update a department by its id
 @router.put("/departments/{department_id}", response_model=DepartmentRead, tags=["departments"])
 def update_department(department_id: int, department: DepartmentCreate, db: Session = Depends(get_db)):
     return crud.update_department(db, department_id=department_id, department_update=department)
 
 
+# endpoint to delete a department by its id
 @router.delete("/departments/{department_id}", tags=["departments"])
 def delete_department(department_id: int, db: Session = Depends(get_db)):
     return crud.delete_department(db, department_id=department_id)
